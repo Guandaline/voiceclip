@@ -36,7 +36,7 @@ The system must:
 
 ## Project Structure
 
-\```text
+```text
 app/
   main.py
 
@@ -68,7 +68,7 @@ docs/
   adr/
 
 README.md
-\```
+```
 
 ---
 
@@ -132,7 +132,7 @@ README.md
 
 ## Core Execution Flow (R1–R5)
 
-\```text
+```text
 1. if is_chitchat → skipped_chitchat
 2. if not kb_grounded → skipped_ungrounded
 3. if candidate_links is empty → skipped_no_match
@@ -140,7 +140,7 @@ README.md
 5. if best_score < threshold → skipped_no_match
 6. if URL already present → already_present
 7. else → injected
-\```
+```
 
 ---
 
@@ -148,9 +148,9 @@ README.md
 
 ### Default: Hybrid
 
-\```text
+```text
 score = 0.7 * semantic + 0.3 * keyword
-\```
+```
 
 ### Strategies
 
@@ -162,10 +162,10 @@ score = 0.7 * semantic + 0.3 * keyword
 
 ## Ambiguity Handling
 
-\```python
+```python
 if abs(top1_score - top2_score) < margin:
     return skipped_no_match
-\```
+```
 
 **Goal:**
 - Avoid incorrect citation injection
@@ -177,10 +177,10 @@ if abs(top1_score - top2_score) < margin:
 
 If embedding fails:
 
-\```text
+```text
 - fallback to keyword strategy
 - record reason: embedding_failed_fallback_keyword
-\```
+```
 
 **Guarantee:**
 - No request failure (no 500)
@@ -191,18 +191,18 @@ If embedding fails:
 
 ### Metrics
 
-\```json
+```json
 {
   "latency_ms": 120,
   "llm_calls": 1
 }
-\```
+```
 
 ---
 
 ### Health Counters
 
-\```json
+```json
 {
   "injected": X,
   "skipped_chitchat": X,
@@ -210,7 +210,7 @@ If embedding fails:
   "skipped_no_match": X,
   "already_present": X
 }
-\```
+```
 
 ---
 
@@ -220,9 +220,9 @@ If embedding fails:
 
 Located at:
 
-\```text
+```text
 tests/golden_set.json
-\```
+```
 
 Includes:
 
@@ -238,16 +238,16 @@ Includes:
 
 ### Eval Script
 
-\```bash
+```bash
 python scripts/eval.py
-\```
+```
 
 Output:
 
-\```text
+```text
 case_id | expected | actual | PASS/FAIL
 accuracy: 0.90
-\```
+```
 
 ---
 

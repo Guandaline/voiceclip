@@ -1,0 +1,199 @@
+[
+  {
+    "id": "seed_01_grounded_inject",
+    "input": {
+      "query": "How do I reset my membership password?",
+      "llm_answer": "Go to the member portal and click Forgot Password. You will receive an email.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["membership", "password", "login"],
+          "description": "Member account management"
+        },
+        {
+          "label": "Listings Help",
+          "url": "https://example.com/listings",
+          "keywords": ["listing", "property"],
+          "description": "Listings help"
+        }
+      ]
+    },
+    "expected": { "status": "injected", "matched_label": "Member Portal" }
+  },
+  {
+    "id": "seed_02_grounded_already_present",
+    "input": {
+      "query": "Where can I find the member portal?",
+      "llm_answer": "You can find it at [Member Portal](https://example.com/members).",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["membership", "portal"],
+          "description": "Member account management"
+        }
+      ]
+    },
+    "expected": {
+      "status": "already_present",
+      "matched_label": "Member Portal"
+    }
+  },
+  {
+    "id": "seed_03_chitchat_skip",
+    "input": {
+      "query": "hello, how are you?",
+      "llm_answer": "Hi! I'm doing well, thanks for asking. How can I help you today?",
+      "grounding": { "is_grounded": true, "kb_grounded": false },
+      "is_chitchat": true,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["membership", "portal"],
+          "description": "Member account management"
+        }
+      ]
+    },
+    "expected": { "status": "skipped_chitchat", "matched_label": null }
+  },
+  {
+    "id": "seed_04_ungrounded_skip",
+    "input": {
+      "query": "What's the weather in Tokyo?",
+      "llm_answer": "I haven't been trained on that one yet.",
+      "grounding": { "is_grounded": false, "kb_grounded": false },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["membership"],
+          "description": "Member portal"
+        }
+      ]
+    },
+    "expected": { "status": "skipped_ungrounded", "matched_label": null }
+  },
+  {
+    "id": "seed_05_no_match",
+    "input": {
+      "query": "What time does the pool open?",
+      "llm_answer": "The pool opens at 7am every day.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["membership", "portal"],
+          "description": "Member account management"
+        }
+      ]
+    },
+    "expected": { "status": "skipped_no_match", "matched_label": null }
+  },
+  {
+    "id": "edge_06_empty_candidates",
+    "input": {
+      "query": "Need help with password.",
+      "llm_answer": "Reset it in settings.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": []
+    },
+    "expected": { "status": "skipped_no_match", "matched_label": null }
+  },
+  {
+    "id": "edge_07_low_threshold",
+    "input": {
+      "query": "How to cook pasta?",
+      "llm_answer": "Boil water and add pasta.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["membership"],
+          "description": "Official portal"
+        }
+      ]
+    },
+    "expected": { "status": "skipped_no_match", "matched_label": null }
+  },
+  {
+    "id": "edge_08_ambiguous_keywords",
+    "input": {
+      "query": "Listing help",
+      "llm_answer": "I can help you with your property listing.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["portal"],
+          "description": "General portal"
+        },
+        {
+          "label": "Listings Guide",
+          "url": "https://example.com/listings",
+          "keywords": ["listing", "guide"],
+          "description": "Help with property listings"
+        }
+      ]
+    },
+    "expected": { "status": "injected", "matched_label": "Listings Guide" }
+  },
+  {
+    "id": "edge_09_similar_scores_margin",
+    "input": {
+      "query": "How do I cancel my plan?",
+      "llm_answer": "You can cancel your plan in the settings menu.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Cancel Plan",
+          "url": "https://example.com/cancel-plan",
+          "keywords": ["cancel", "plan", "settings"],
+          "description": "Guide to canceling your plan."
+        },
+        {
+          "label": "Cancel Subscription",
+          "url": "https://example.com/cancel-sub",
+          "keywords": ["cancel", "plan", "menu"],
+          "description": "Steps to cancel your subscription."
+        }
+      ]
+    },
+    "expected": { "status": "skipped_no_match", "matched_label": null }
+  },
+  {
+    "id": "edge_10_duplication_plain_text",
+    "input": {
+      "query": "What is the portal link?",
+      "llm_answer": "The link is https://example.com/members. Let me know if you need help.",
+      "grounding": { "is_grounded": true, "kb_grounded": true },
+      "is_chitchat": false,
+      "candidate_links": [
+        {
+          "label": "Member Portal",
+          "url": "https://example.com/members",
+          "keywords": ["portal", "link"],
+          "description": "Access the member portal."
+        }
+      ]
+    },
+    "expected": {
+      "status": "already_present",
+      "matched_label": "Member Portal"
+    }
+  }
+]

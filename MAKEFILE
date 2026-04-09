@@ -16,7 +16,7 @@ install:
 	poetry install
 
 run:
-	poetry run uvicorn app.main:app --reload
+	poetry run uvicorn voiceflip.api.main:app --reload
 
 lint:
 	poetry run ruff check .
